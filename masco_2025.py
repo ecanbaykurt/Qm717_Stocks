@@ -201,7 +201,7 @@ def plot_cdf(returns, stock_ticker="MAS"):
     # Cumulative probabilities
     p_stock = np.linspace(0, 1, len(stock_sorted))
     p_sp = np.linspace(0, 1, len(sp_sorted))
-    
+
     # Create plot
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.scatter(stock_sorted, p_stock, s=20, marker='^', color="red", alpha=0.7, label=stock_ticker)
@@ -250,9 +250,9 @@ def generate_pdf_report(returns, regressions, fig_normal, fig_cdf, start_date, e
     )
     subtitle = Paragraph(f"Analysis Period: {start_date} to {end_date}", subtitle_style)
     elements.append(subtitle)
-    elements.append(Spacer(1, 0.2*inch))
+    elements.append(Spacer(1, 0.3*inch))
     
-    # Educational Introduction Section
+    # Style definitions for interpretation section (used later)
     intro_style = ParagraphStyle(
         'IntroStyle',
         parent=styles['Normal'],
@@ -268,22 +268,6 @@ def generate_pdf_report(returns, regressions, fig_normal, fig_cdf, start_date, e
         textColor=colors.HexColor('#1f77b4'),
         spaceAfter=10
     )
-    
-    elements.append(Paragraph("Why This Analysis Matters", intro_title_style))
-    
-    intro_text = [
-        "<b>What are we doing here?</b><br/>Think of this like a detective story! We're trying to figure out what makes a stock's price move. Is it the overall market? Interest rates? Something else?",
-        "<b>Why should you care?</b><br/>• <b>For Investors:</b> Understanding what drives a stock helps you make smarter investment decisions. If you know a stock moves 1.5x with the market, you can better predict what might happen.<br/>• <b>For Companies:</b> Companies use this to understand their stock's risk profile and how it compares to competitors.<br/>• <b>For Students:</b> This is real-world finance! You're learning the same tools that professionals use every day.",
-        "<b>What can we learn from these results?</b><br/>1. <b>Beta (Market Sensitivity):</b> The S&P 500 coefficient tells us how much the stock moves when the market moves. If it's 1.5, the stock moves 1.5% when the market moves 1% (more volatile!). If it's 0.8, the stock moves 0.8% when the market moves 1% (less volatile).<br/>2. <b>Risk Factors:</b> Which factors actually matter? The stars (***, **, *) tell us what's statistically significant.<br/>3. <b>Model Quality:</b> R² tells us how well our model explains the stock's movements. Higher is better!",
-        "<b>Real-World Examples:</b><br/>• <b>Tech Stocks</b> (like Apple, Microsoft): Often have high betas (1.2-1.5) - they swing more than the market<br/>• <b>Utility Stocks</b> (like power companies): Usually have low betas (0.5-0.8) - they're more stable<br/>• <b>Gold Stocks:</b> Sometimes have negative correlation with the market - they go up when markets go down!",
-        "<b>The Bottom Line:</b> This analysis helps answer: 'If the market goes up 10%, how much will my stock go up?' That's super useful for anyone investing money!"
-    ]
-    
-    for text in intro_text:
-        elements.append(Paragraph(text, intro_style))
-        elements.append(Spacer(1, 0.15*inch))
-    
-    elements.append(Spacer(1, 0.2*inch))
     
     # Page 1: Regression Table
     elements.append(Paragraph(f"{stock_name} ({stock_ticker}) Monthly Return Regressions", styles['Heading2']))
@@ -358,35 +342,6 @@ def generate_pdf_report(returns, regressions, fig_normal, fig_cdf, start_date, e
     elements.append(reg_table)
     elements.append(Spacer(1, 0.2*inch))
     elements.append(Paragraph("* p<0.1; ** p<0.05; *** p<0.01", styles['Normal']))
-    
-    # Add Interpretation Guide
-    elements.append(Spacer(1, 0.3*inch))
-    elements.append(Paragraph("How to Read This Table", intro_title_style))
-    
-    interpretation_text = [
-        "<b>The Numbers:</b>",
-        "• <b>Coefficients</b> (the big numbers): Tell you how much the stock moves when that factor moves by 1%",
-        "• <b>Standard Errors</b> (in parentheses): Show how precise our estimate is - smaller is better!",
-        "• <b>Stars (***, **, *):</b> Tell you if the result is statistically significant (not just random luck)",
-        "",
-        "<b>What Each Model Tells Us:</b>",
-        "• <b>Model (1):</b> How does the stock move with the S&P 500? This is like asking 'Is this stock more or less volatile than the market?'",
-        "• <b>Model (2):</b> How does it move with the value-weighted market? This gives a broader market view",
-        "• <b>Model (3):</b> How does it react to interest rates? Higher rates usually hurt stocks, but by how much?",
-        "• <b>Model (4):</b> Combines S&P 500 and value-weighted - does this help explain more?",
-        "• <b>Model (5):</b> The full model - all factors together. Usually has the highest R²!",
-        "",
-        "<b>The S,R² Column:</b>",
-        "• <b>S</b> (first number): Residual standard error - how far off our predictions are on average. Lower is better!",
-        "• <b>R²</b> (second number): How much of the stock's movement we can explain. 0.5 means we explain 50% - pretty good!"
-    ]
-    
-    for text in interpretation_text:
-        if text == "":
-            elements.append(Spacer(1, 0.1*inch))
-        else:
-            elements.append(Paragraph(text, intro_style))
-            elements.append(Spacer(1, 0.08*inch))
     
     # Add Excel Tutorial Section
     elements.append(Spacer(1, 0.3*inch))
